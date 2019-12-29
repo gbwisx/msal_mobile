@@ -31,7 +31,7 @@ public class MsalMobilePlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "com.gbwisx.msal_mobile");
+    final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.gbwisx.msal_mobile");
     mMethodHandler = new AuthMethodHandler();
     channel.setMethodCallHandler(mMethodHandler);
   }

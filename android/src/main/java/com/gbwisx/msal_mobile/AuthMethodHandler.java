@@ -74,7 +74,7 @@ public class AuthMethodHandler implements MethodChannel.MethodCallHandler {
 
             @Override
             public void onAccountChanged(@Nullable IAccount priorAccount, @Nullable IAccount currentAccount) {
-                success(result, new Payloads.GetAccountResultPayload(priorAccount, currentAccount));
+                success(result, new Payloads.GetAccountResultPayload(currentAccount));
             }
 
             @Override

@@ -49,7 +49,6 @@ public class Results {
     }
 
     static class ExceptionDetail {
-        private String type;
         private String message;
         private String errorCode;
 
@@ -62,7 +61,6 @@ public class Results {
         }
 
         private void init(@NonNull final Throwable throwable) {
-            type = throwable.getClass().getName();
             message = throwable.getMessage();
 
             if (throwable instanceof MsalException) {

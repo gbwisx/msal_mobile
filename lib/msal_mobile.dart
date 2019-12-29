@@ -11,12 +11,13 @@ export 'account.dart';
 export 'payload.dart';
 
 class MsalMobile {
-  static const MethodChannel _channel = const MethodChannel('msal_mobile');
+  static const MethodChannel _channel = const MethodChannel('com.gbwisx.msal_mobile');
   static bool initialized = false;
 
   /// Creates a new MsalMobile client object to make calls to the MSAL library.
   /// The signed in status is updated as a result of this call.
-  static Future<MsalMobile> create(String configFilePath) async {
+  static Future<MsalMobile> create(String configFilePath, String authority) async {
+
     if (initialized) {
       throw MsalMobileException.fromErrorCode(MsalMobileExceptionErrorCode.alreadyInitialized);
     }
@@ -31,7 +32,7 @@ class MsalMobile {
       throw MsalMobileException.fromErrorCodeWithInner(MsalMobileExceptionErrorCode.configReadError, ex);
     }
 
-    final response = await _channel.invokeMethod<String>('init', <String, dynamic>{'configFilePath': cacheFilePath});
+    final response = await _channel.invokeMethod<String>('init', <String, dynamic>{'configFilePath': cacheFilePath, 'authority': authority});
     final result = response != null ? MsalMobileResult.fromJson(jsonDecode(response)) : null;
     if (!result.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);

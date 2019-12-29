@@ -2,6 +2,7 @@
   "client_id" : "<app-registration-client-id>",
   "authorization_user_agent" : "DEFAULT",
   "redirect_uri" : "msauth://com.gbwisx.msal_mobile_example/<url-encoded-package-signature-hash>",
+  "ios_redirect_uri": "msauth.<your-ios-bundle-identifier>://auth",
   "account_mode": "SINGLE",
   "authorities" : [
     {

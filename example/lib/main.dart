@@ -11,6 +11,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   static const String IMPERSONATION_SCOPE = 'api://<app-registration-client-id>/<delegated-permission-name>';
   static const String TENANT_ID = '<target-tenant-id_or_"organizations">';
+  static String authority = "https://login.microsoftonline.com/$TENANT_ID";
 
   MsalMobile msal;
   bool isSignedIn = false;
@@ -18,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    MsalMobile.create('assets/auth_config.json').then((client) {
+    MsalMobile.create('assets/auth_config.json', authority).then((client) {
       setState(() {
         msal = client;
       });
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp> {
   /// Updates the signed in state
   refreshSignedInStatus() {
     msal.getSignedIn().then((loggedIn) {
+      print('refreshing');
       setState(() {
         isSignedIn = loggedIn;
       });
@@ -38,7 +40,8 @@ class _MyAppState extends State<MyApp> {
   logMsalMobileError(MsalMobileException exception) {
     print('${exception.errorCode}: ${exception.message}');
     if (exception.innerException != null) {
-      print('inner exception = ${exception.innerException.errorCode}: ${exception.innerException.message}');
+      print(
+          'inner exception = ${exception.innerException.errorCode}: ${exception.innerException.message}');
     }
   }
 
@@ -50,17 +53,20 @@ class _MyAppState extends State<MyApp> {
       if (exception is MsalMobileException) {
         logMsalMobileError(exception);
       } else {
+        final ex = exception as Exception;
         print('exception occurred');
+        print(ex.toString());
       }
     });
   }
 
   /// Gets a token silently unless the interactive experience is required.
   handleGetToken() async {
-    String authority = "https://login.microsoftonline.com/$TENANT_ID";
     // you would use this instead to auth for all organizations: "https://login.microsoftonline.com/common"
     await msal.acquireToken([IMPERSONATION_SCOPE], authority).then((result) {
       print('access token (truncated): ${result.accessToken}');
+      print('expiration');
+      print(result.expiresOn);
     }).catchError((exception) {
       if (exception is MsalMobileException) {
         logMsalMobileError(exception);
@@ -78,7 +84,9 @@ class _MyAppState extends State<MyApp> {
       if (exception is MsalMobileException) {
         logMsalMobileError(exception);
       } else {
+        final ex = exception as Exception;
         print('exception occurred');
+        print(ex.toString());
       }
     });
   }
@@ -87,7 +95,8 @@ class _MyAppState extends State<MyApp> {
   handleGetTokenSilently() async {
     String authority = "https://login.microsoftonline.com/$TENANT_ID";
     // you would use this instead to auth for all organizations: "https://login.microsoftonline.com/common"
-    await msal.acquireTokenSilent([IMPERSONATION_SCOPE], authority).then((result) {
+    await msal
+        .acquireTokenSilent([IMPERSONATION_SCOPE], authority).then((result) {
       print('access token (truncated): ${result.accessToken}');
     }).catchError((exception) {
       if (exception is MsalMobileException) {
@@ -101,7 +110,9 @@ class _MyAppState extends State<MyApp> {
   /// Signs a user out.
   handleSignOut() async {
     try {
+      print('signing out');
       await msal.signOut();
+      print('signout done');
       refreshSignedInStatus();
     } on MsalMobileException catch (exception) {
       logMsalMobileError(exception);
@@ -113,11 +124,7 @@ class _MyAppState extends State<MyApp> {
     await msal.getAccount().then((result) {
       if (result.currentAccount != null) {
         print('current account id: ${result.currentAccount.id}');
-      }
-      if (result.priorAccount != null) {
-        print('prior account id: ${result.priorAccount.id}');
-      }
-      if (result.currentAccount == null && result.priorAccount == null) {
+      } else {
         print('no account found');
       }
     }).catchError((exception) {

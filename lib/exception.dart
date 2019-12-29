@@ -1,34 +1,29 @@
 import 'package:flutter/foundation.dart';
 
 class MsalMobileException implements Exception {
-  final String type;
   final String message;
   final String errorCode;
   final MsalMobileException innerException;
 
-  MsalMobileException({@required this.message, this.errorCode, this.type, this.innerException});
+  MsalMobileException({@required this.message, this.errorCode, this.innerException});
 
   MsalMobileException.fromErrorCode(MsalMobileExceptionErrorCode code)
-      : type = null,
-        message = code.message,
+      : message = code.message,
         errorCode = code.errorCode,
         innerException = null;
 
   MsalMobileException.fromErrorCodeWithInner(MsalMobileExceptionErrorCode code, Exception innerException)
-      : type = null,
-        message = code.message,
+      : message = code.message,
         errorCode = code.errorCode,
         innerException = innerException;
 
   MsalMobileException.copy(MsalMobileException exception, MsalMobileException innerException)
-      : type = exception?.type,
-        message = exception?.message,
+      : message = exception?.message,
         errorCode = exception?.errorCode,
         innerException = innerException;
 
   MsalMobileException.fromJson(Map<String, dynamic> json)
-      : type = json['isSuccess'],
-        message = json['message'],
+      : message = json['message'],
         errorCode = json['errorCode'],
         innerException = null;
 }
@@ -49,7 +44,7 @@ class MsalMobileExceptionErrorCode {
   static MsalMobileExceptionErrorCode configRequired = MsalMobileExceptionErrorCode('already_initialized',
       'An auth config JSON file is required. Please ensure that you have added an auth config and added it to your pubspec.yaml.');
   static MsalMobileExceptionErrorCode authorityRequired =
-      MsalMobileExceptionErrorCode('already_initialized', 'An authority must be specified to acquire a token silently.');
+      MsalMobileExceptionErrorCode('authority_required', 'An authority must be specified for this operation.');
   static MsalMobileExceptionErrorCode alreadySignedIn =
       MsalMobileExceptionErrorCode('already_signed_in', 'You are already signed in. Call one of the acquire token methods to get a token.');
   static MsalMobileExceptionErrorCode unknown = MsalMobileExceptionErrorCode('unknown', 'An unknown error occurred.');

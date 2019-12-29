@@ -6,7 +6,7 @@ The plugin wraps the Android and iOS MSAL libraries from Microsoft.  MSAL Mobile
 
 ## Project Requirements
 
-* Flutter version of at least 1.13
+* Flutter version greater than 1.12
 * Android minimum SDK Version of 19
 * iOS version of at least 11.0
 

@@ -12,5 +12,7 @@ class MsalMobileAccount {
         authority = json['authority'],
         id = json['id'],
         username = json['username'],
-        claims = json['claims'] != null ? HashMap<String, dynamic>.from(json['claims']) : HashMap<String, dynamic>();
+        claims = json['claims'] != null
+            ? HashMap<String, dynamic>.from(json['claims'])
+            : HashMap<String, dynamic>();
 }

@@ -7,7 +7,10 @@ class MsalMobileGetAccountResultPayload extends MsalMobileResultPayload {
   final bool accountLoaded;
 
   MsalMobileGetAccountResultPayload.fromJson(Map<String, dynamic> json)
-      : currentAccount = json['currentAccount'] != null ? MsalMobileAccount.fromJson(json['currentAccount'] as Map<String, dynamic>) : null,
+      : currentAccount = json['currentAccount'] != null
+            ? MsalMobileAccount.fromJson(
+                json['currentAccount'] as Map<String, dynamic>)
+            : null,
         accountLoaded = json['accountLoaded'];
 }
 
@@ -24,6 +27,8 @@ class MsalMobileAuthenticationResultPayload extends MsalMobileResultPayload {
         success = json['success'],
         accessToken = json['accessToken'],
         tenantId = json['tenantId'],
-        scope = json['scope'] != null ? json['scope'] as List<dynamic> : List<dynamic>(),
+        scope = json['scope'] != null
+            ? json['scope'] as List<dynamic>
+            : List<dynamic>(),
         expiresOn = json['expiresOn'] != null ? json['expiresOn'] : null;
 }

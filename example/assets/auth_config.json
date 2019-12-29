@@ -1,8 +1,8 @@
 {
-  "client_id" : "[app-registration-client-id]",
+  "client_id" : "e5a55502-c69d-4135-a49d-0e5d0cd5049c",
   "authorization_user_agent" : "DEFAULT",
-  "redirect_uri" : "msauth://[your-package-name]/[url-encoded-package-signature-hash]",
-  "ios_redirect_uri": "msauth.[your-ios-bundle-identifier]://auth",
+  "redirect_uri" : "msauth://com.gbwisx.msal_mobile_example/ldYUHWCGNN20tqnfF%2F8PbpDXSXM%3D",
+  "ios_redirect_uri": "msauth.<your-ios-bundle-identifier>://auth",
   "account_mode": "SINGLE",
   "authorities" : [
     {

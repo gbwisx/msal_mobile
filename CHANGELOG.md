@@ -11,3 +11,19 @@
 ## 0.1.0
 
 * beta release
+
+## 0.1.1
+
+* bug fixes
+
+## 0.1.2
+
+* bug fixes
+
+## 0.1.3
+
+* update dependencies
+
+## 0.1.4
+
+* New documentation on setting up Azure delegated permissions

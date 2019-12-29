@@ -4,7 +4,6 @@ import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 public class Payloads {

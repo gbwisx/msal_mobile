@@ -9,8 +9,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String SCOPE = 'api://[app-registration-client-id]/[delegated-permission-name]';
-  static const String TENANT_ID = '[target-tenant-id_or_"organizations"]';
+  static const String SCOPE = 'api://1b96e9ff-c59a-4123-8fa4-fcd1a76c1b06/user_impersonation';
+  static const String TENANT_ID = 'organizations';
   static String authority = "https://login.microsoftonline.com/$TENANT_ID";
 
   MsalMobile msal;

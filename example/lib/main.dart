@@ -9,8 +9,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String IMPERSONATION_SCOPE = 'api://<app-registration-client-id>/<delegated-permission-name>';
-  static const String TENANT_ID = '<target-tenant-id_or_"organizations">';
+  static const String SCOPE = 'api://[app-registration-client-id]/[delegated-permission-name]';
+  static const String TENANT_ID = '[target-tenant-id_or_"organizations"]';
   static String authority = "https://login.microsoftonline.com/$TENANT_ID";
 
   MsalMobile msal;
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
 
   /// Signs a user in
   handleSignIn() async {
-    await msal.signIn(null, [IMPERSONATION_SCOPE]).then((result) {
+    await msal.signIn(null, [SCOPE]).then((result) {
       refreshSignedInStatus();
     }).catchError((exception) {
       if (exception is MsalMobileException) {
@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   /// Gets a token silently unless the interactive experience is required.
   handleGetToken() async {
     // you would use this instead to auth for all organizations: "https://login.microsoftonline.com/common"
-    await msal.acquireToken([IMPERSONATION_SCOPE], authority).then((result) {
+    await msal.acquireToken([SCOPE], authority).then((result) {
       print('access token (truncated): ${result.accessToken}');
     }).catchError((exception) {
       if (exception is MsalMobileException) {
@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
 
   /// Get a token interactively.
   handleGetTokenInteractively() async {
-    await msal.acquireTokenInteractive([IMPERSONATION_SCOPE]).then((result) {
+    await msal.acquireTokenInteractive([SCOPE]).then((result) {
       print('access token (truncated): ${result.accessToken}');
     }).catchError((exception) {
       if (exception is MsalMobileException) {
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
   handleGetTokenSilently() async {
     String authority = "https://login.microsoftonline.com/$TENANT_ID";
     // you would use this instead to auth for all organizations: "https://login.microsoftonline.com/common"
-    await msal.acquireTokenSilent([IMPERSONATION_SCOPE], authority).then((result) {
+    await msal.acquireTokenSilent([SCOPE], authority).then((result) {
       print('access token (truncated): ${result.accessToken}');
     }).catchError((exception) {
       if (exception is MsalMobileException) {

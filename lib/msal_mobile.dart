@@ -17,7 +17,6 @@ class MsalMobile {
   /// Creates a new MsalMobile client object to make calls to the MSAL library.
   /// The signed in status is updated as a result of this call.
   static Future<MsalMobile> create(String configFilePath, String authority) async {
-
     if (initialized) {
       throw MsalMobileException.fromErrorCode(MsalMobileExceptionErrorCode.alreadyInitialized);
     }
@@ -42,6 +41,7 @@ class MsalMobile {
     return client;
   }
 
+  /// Caches the auth configuration file so it can be accessed by the platform specific MSAL implementations.
   static Future<String> cacheConfigFile(String configPath) async {
     final ByteData data = await rootBundle.load(configPath);
     final file = await DefaultCacheManager().putFile(configPath, data.buffer.asUint8List());

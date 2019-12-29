@@ -29,8 +29,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:host="com.gbwisx.msal_mobile_example"
-                    android:path="/ldYUHWCGNN20tqnfF/8PbpDXSXM="
+                    android:host="[your-package-name]"
+                    android:path="/[your-base64-signature-hash]"
                     android:scheme="msauth" />
             </intent-filter>
         </activity>

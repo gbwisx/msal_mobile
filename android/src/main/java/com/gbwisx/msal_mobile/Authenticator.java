@@ -2,16 +2,20 @@ package com.gbwisx.msal_mobile;
 
 import android.app.Activity;
 
+import com.microsoft.identity.client.AcquireTokenParameters;
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IPublicClientApplication;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication.CurrentAccountCallback;
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication.SignOutCallback;
+import com.microsoft.identity.client.Prompt;
 import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalException;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +54,14 @@ class Authenticator {
     }
 
     void acquireToken(@NonNull final String[] scopes, @NonNull final AuthenticationCallback callback) {
-        mClient.acquireToken(mActivity, scopes, callback);
+        List<String> scopeList = Arrays.asList(scopes);
+        AcquireTokenParameters acquireTokenParameters = new AcquireTokenParameters.Builder()
+                .startAuthorizationFromActivity(mActivity)
+                .withPrompt(Prompt.SELECT_ACCOUNT)
+                .withScopes(scopeList)
+                .withCallback(callback)
+                .build();
+        mClient.acquireToken(acquireTokenParameters);
     }
 
     void acquireTokenSilent(@NonNull final String[] scopes, @NonNull final String authority, @NonNull final SilentAuthenticationCallback callback) {

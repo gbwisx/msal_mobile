@@ -65,6 +65,7 @@ class Authenticator {
     
     public func acquireToken(scopes: [String], completionBlock: @escaping MSALCompletionBlock) {
         let parameters = MSALInteractiveTokenParameters(scopes: scopes, webviewParameters: webViewParameters)
+        parameters.promptType = .selectAccount
         client.acquireToken(with: parameters, completionBlock: completionBlock)
     }
     

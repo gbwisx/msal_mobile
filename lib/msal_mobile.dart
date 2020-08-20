@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 import 'exception.dart';
 import 'payload.dart';
 import 'result.dart';
 
-export 'exception.dart';
 export 'account.dart';
+export 'exception.dart';
 export 'payload.dart';
 
 class MsalMobile {
@@ -24,21 +26,21 @@ class MsalMobile {
           MsalMobileExceptionErrorCode.alreadyInitialized);
     }
 
-    String cacheFilePath;
+//    String cacheFilePath;
     if (configFilePath == null || configFilePath.length < 1) {
       throw MsalMobileException.fromErrorCode(
           MsalMobileExceptionErrorCode.configRequired);
     }
-    try {
-      cacheFilePath = await cacheConfigFile(configFilePath);
-    } on Exception catch (ex) {
-      throw MsalMobileException.fromErrorCodeWithInner(
-          MsalMobileExceptionErrorCode.configReadError, ex);
-    }
+//    try {
+//      cacheFilePath = await cacheConfigFile(configFilePath);
+//    } on Exception catch (ex) {
+//      throw MsalMobileException.fromErrorCodeWithInner(
+//          MsalMobileExceptionErrorCode.configReadError, ex);
+//    }
 
     final response = await _channel.invokeMethod<String>(
         'init', <String, dynamic>{
-      'configFilePath': cacheFilePath,
+      'configFilePath': configFilePath,
       'authority': authority
     });
     final result = response != null

@@ -2,6 +2,9 @@ package com.gbwisx.msal_mobile;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.microsoft.identity.client.AuthenticationCallback;
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
@@ -13,8 +16,6 @@ import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
@@ -31,17 +32,21 @@ public class AuthMethodHandler implements MethodChannel.MethodCallHandler {
         // even though this is an error, success is returned because a success response allows for more detail to be sent back
         result.success(Results.MsalMobileResult.error(exception));
     }
+
     private void error(@NonNull Result result, @NonNull String errorCode, @NonNull String message) {
         final MsalMobileException exception = new MsalMobileException(errorCode, message);
         result.success(Results.MsalMobileResult.error(exception));
     }
+
     private void uiRequiredError(@NonNull Result result, @NonNull MsalUiRequiredException exception) {
         // even though this is an error, success is returned because a success response allows for more detail to be sent back
         result.success(Results.MsalMobileResult.uiRequiredError(exception));
     }
+
     private void success(@NonNull Result result, Payloads.MsalMobileResultPayload payload) {
         result.success(Results.MsalMobileResult.success(payload));
     }
+
     private void success(@NonNull Result result) {
         result.success(Results.MsalMobileResult.success(true));
     }
@@ -67,14 +72,22 @@ public class AuthMethodHandler implements MethodChannel.MethodCallHandler {
 
     private void handleGetAccount(@NonNull final Result result) {
         mAuth.getAccount(new ISingleAccountPublicClientApplication.CurrentAccountCallback() {
+            boolean resultSent = false;
+
             @Override
             public void onAccountLoaded(@Nullable IAccount activeAccount) {
-                success(result, new Payloads.GetAccountResultPayload(activeAccount));
+                if (!resultSent) {
+                    resultSent = true;
+                    success(result, new Payloads.GetAccountResultPayload(null, activeAccount));
+                }
             }
 
             @Override
             public void onAccountChanged(@Nullable IAccount priorAccount, @Nullable IAccount currentAccount) {
-                success(result, new Payloads.GetAccountResultPayload(currentAccount));
+                if (!resultSent) {
+                    resultSent = true;
+                    success(result, new Payloads.GetAccountResultPayload(priorAccount, currentAccount));
+                }
             }
 
             @Override
@@ -157,7 +170,7 @@ public class AuthMethodHandler implements MethodChannel.MethodCallHandler {
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         try {
-            switch(call.method) {
+            switch (call.method) {
                 case "init": {
                     final String configFilePath = call.argument("configFilePath");
                     handleInit(result, configFilePath);

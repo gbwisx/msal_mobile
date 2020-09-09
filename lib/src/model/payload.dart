@@ -1,4 +1,4 @@
-import 'package:msal_mobile/account.dart';
+import 'package:msal_mobile/src/model/account.dart';
 
 class MsalMobileResultPayload {}
 

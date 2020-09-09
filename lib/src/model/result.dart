@@ -1,4 +1,4 @@
-import 'exception.dart';
+import '../exception/exception.dart';
 import 'payload.dart';
 
 class MsalMobileResult {

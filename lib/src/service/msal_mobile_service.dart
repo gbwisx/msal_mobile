@@ -23,7 +23,7 @@ class MsalMobile {
     final String _cacheHash = "$configFilePath-$authority";
     if (!_cache.containsKey(_cacheHash)) {
       IAuthenticator _msalAuthenticatorInstance =
-          _MicrosoftAuthenticator(configFilePath, authority);
+      _MicrosoftAuthenticator(configFilePath, authority);
       _cache.clear();
       _cache[_cacheHash] = _msalAuthenticatorInstance;
     }
@@ -60,11 +60,14 @@ abstract class IAuthenticator {
   /// Attempts to acquire a token silently.  If silent token acquisition fails because the UI is required, then an attempt to acquire a token interactively will be made.
   Future<MsalMobileAuthenticationResultPayload> acquireToken(
       List<String> scopes, String authority);
+
+  Future<MsalMobileAuthenticationResultPayload> acquireTokenWithLoginHint(
+      List<String> scopes, String authority, String loginHint);
 }
 
 class _MicrosoftAuthenticator implements IAuthenticator {
   static const MethodChannel _channel =
-      const MethodChannel('com.gbwisx.msal_mobile');
+  const MethodChannel('com.gbwisx.msal_mobile');
   bool _initialized = false;
   Future<bool> _isPluginReady;
 
@@ -237,7 +240,47 @@ class _MicrosoftAuthenticator implements IAuthenticator {
         );
         final interactiveResult = interactiveResponse != null
             ? MsalMobileAuthenticationResult.fromJson(
-                jsonDecode(interactiveResponse))
+            jsonDecode(interactiveResponse))
+            : null;
+        if (!interactiveResult.isSuccess &&
+            interactiveResult.exception != null) {
+          throw MsalMobileException.copy(
+              interactiveResult.exception, interactiveResult.innerException);
+        }
+        return interactiveResult.payload;
+      } else if (!silentResult.isSuccess && silentResult.exception != null) {
+        throw MsalMobileException.copy(
+            silentResult.exception, silentResult.innerException);
+      }
+      return silentResult.payload;
+    });
+  }
+
+  @override
+  Future<MsalMobileAuthenticationResultPayload> acquireTokenWithLoginHint(
+      List<String> scopes, String authority, String loginHint) async {
+    return _isPluginReady.then((_) async {
+      final silentResponse = await _channel.invokeMethod(
+        'acquireTokenSilent',
+        <String, dynamic>{'scopes': scopes, 'authority': authority},
+      );
+      final silentResult = silentResponse != null
+          ? MsalMobileAuthenticationResult.fromJson(jsonDecode(silentResponse))
+          : null;
+      if (!silentResult.isSuccess && silentResult.isUiRequired) {
+
+        Map<String, dynamic> params = {'scopes': scopes};
+        if(loginHint != null){
+          params['loginHint'] = loginHint;
+        }
+        // acquire a token interactively
+        final interactiveResponse = await _channel.invokeMethod(
+          'acquireTokenWithLoginHint',
+          params,
+        );
+        final interactiveResult = interactiveResponse != null
+            ? MsalMobileAuthenticationResult.fromJson(
+            jsonDecode(interactiveResponse))
             : null;
         if (!interactiveResult.isSuccess &&
             interactiveResult.exception != null) {

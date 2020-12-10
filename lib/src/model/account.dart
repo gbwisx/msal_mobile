@@ -5,6 +5,7 @@ class MsalMobileAccount {
   final String authority;
   final String id;
   final String username;
+  final String email;
   final HashMap<String, dynamic> claims;
 
   MsalMobileAccount.fromJson(Map<String, dynamic> json)
@@ -12,6 +13,7 @@ class MsalMobileAccount {
         authority = json['authority'],
         id = json['id'],
         username = json['username'],
+        email = json['email'],
         claims = json['claims'] != null
             ? HashMap<String, dynamic>.from(json['claims'])
             : HashMap<String, dynamic>();

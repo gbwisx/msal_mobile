@@ -74,4 +74,10 @@ class Authenticator {
             client.acquireTokenSilent(with: parameters, completionBlock: completionBlock)
         }
     }
+    
+    public func acquireTokenWithLoginHint(scopes: [String], loginHint: String, completionBlock: @escaping MSALCompletionBlock) {
+        let parameters = MSALInteractiveTokenParameters(scopes: scopes, webviewParameters: webViewParameters)
+        parameters.loginHint=loginHint
+        client.acquireToken(with: parameters, completionBlock: completionBlock)
+    }
 }

@@ -20,9 +20,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    IAuthenticator authenticator =
-        MsalMobile.create('assets/auth_config.json', authority);
-
+    
     msal = MsalMobile.create('assets/auth_config.json', authority);
     msal.isReady.then((client) {
       setState(() {});

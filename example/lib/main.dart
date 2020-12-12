@@ -9,20 +9,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const String SCOPE = 'api://1b96e9ff-c59a-4123-8fa4-fcd1a76c1b06/user_impersonation';
+  static const String SCOPE =
+      'api://1b96e9ff-c59a-4123-8fa4-fcd1a76c1b06/user_impersonation';
   static const String TENANT_ID = 'organizations';
   static String authority = "https://login.microsoftonline.com/$TENANT_ID";
 
-  MsalMobile msal;
+  IAuthenticator msal;
   bool isSignedIn = false;
 
   @override
   void initState() {
     super.initState();
-    MsalMobile.create('assets/auth_config.json', authority).then((client) {
-      setState(() {
-        msal = client;
-      });
+    
+    msal = MsalMobile.create('assets/auth_config.json', authority);
+    msal.isReady.then((client) {
+      setState(() {});
       refreshSignedInStatus();
     });
   }
@@ -40,7 +41,9 @@ class _MyAppState extends State<MyApp> {
   logMsalMobileError(MsalMobileException exception) {
     print('${exception.errorCode}: ${exception.message}');
     if (exception.innerException != null) {
-      print('inner exception = ${exception.innerException.errorCode}: ${exception.innerException.message}');
+      print(
+          'inner exception = ${exception.innerException.errorCode}: ${exception
+              .innerException.message}');
     }
   }
 

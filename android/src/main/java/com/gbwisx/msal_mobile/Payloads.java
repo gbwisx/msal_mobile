@@ -10,11 +10,15 @@ public class Payloads {
     static interface MsalMobileResultPayload {}
 
     static class GetAccountResultPayload implements MsalMobileResultPayload {
+        private Payloads.Account previousAccount;
         private Payloads.Account currentAccount;
         private boolean accountLoaded;
 
-        GetAccountResultPayload(IAccount currentMsalAccount) {
+        GetAccountResultPayload(IAccount priorAccount, IAccount currentMsalAccount) {
             accountLoaded = true;
+            if (previousAccount != null) {
+                previousAccount = new Payloads.Account(priorAccount.getTenantId(), priorAccount.getClaims(), priorAccount.getAuthority(), priorAccount.getId(), priorAccount.getUsername());
+            }
             if (currentMsalAccount != null) {
                 currentAccount = new Payloads.Account(currentMsalAccount.getTenantId(), currentMsalAccount.getClaims(), currentMsalAccount.getAuthority(), currentMsalAccount.getId(), currentMsalAccount.getUsername());
             }

@@ -144,6 +144,23 @@ class AuthMethodHandler {
         })
     }
     
+    private func handleAcquireTokenWithLoginHint(result: @escaping FlutterResult, scopes: [String], loginHint: String) {
+        auth?.acquireTokenWithLoginHint(scopes: scopes, loginHint:loginHint, completionBlock: { (msalResult, error) in
+            if let error = error {
+                let nsError = error as NSError
+                self.error(result: result, exception: nsError)
+                return
+            }
+            
+            guard let msalResult = msalResult else {
+                self.error(result: result, errorCode: "msal_result_empty", message: "No error occurred but MSAL result was unexpectedly empty.")
+                return
+            }
+            
+            self.success(result: result, payload: MsalMobileResultPayload(msalResult: msalResult))
+        })
+    }
+    
     public func onMethodCall(call: FlutterMethodCall, result: @escaping FlutterResult) -> Void {
         do {
             switch (call.method) {
@@ -173,6 +190,12 @@ class AuthMethodHandler {
                 let args = call.arguments! as! NSDictionary
                 let scopes = args["scopes"] as! [String]
                 try handleAcquireTokenSilent(result: result, scopes: scopes);
+                break;
+            case "acquireTokenWithLoginHint":
+                let args = call.arguments! as! NSDictionary
+                let scopes = args["scopes"] as! [String]
+                let loginHint = args["loginHint"] as! String
+            handleAcquireTokenWithLoginHint(result: result, scopes: scopes, loginHint: loginHint);
                 break;
             default:
                 result(FlutterMethodNotImplemented);

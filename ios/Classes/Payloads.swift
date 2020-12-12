@@ -77,6 +77,7 @@ class Account : Codable {
     private var authority : String?
     private var id : String?
     private var username : String?
+    private var email: String?
     
     init(msalAccount : MSALAccount) {
         let info = msalAccount.homeAccountId
@@ -86,6 +87,8 @@ class Account : Codable {
         authority = nil // not available
         id = msalAccount.identifier
         username = msalAccount.identifier
+        //username is the upn which is the email of the user in azure ad
+        email = msalAccount.username
     }
     
     private func flattenClaims(msalClaims: [String: Any]?) -> [String: String]? {

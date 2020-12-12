@@ -4,6 +4,18 @@ A Flutter plugin for authenticating with Azure AD on Android and iOS using the M
 
 The plugin wraps the Android and iOS MSAL libraries from Microsoft.  MSAL Mobile currently only supports a single account at a time.  The API allows for a user to be signed in or out, retrieve basic information about the signed in user and acquire tokens both interactively and silently.
 
+## Version 1.0 Breaking Change
+Version 1.0 contains a breaking change to the MSAL Mobile ready callback.
+
+The following:\
+`MsalMobile.create('assets/auth_config.json', authority).then((client) { ... });`
+\
+\
+Now becomes:\
+`IAuthenticator authenticator = MsalMobile.create('assets/auth_config.json', authority);
+authenticator.isReady.then((client) { ... });
+`
+
 ## Project Requirements
 
 * Flutter version greater than 1.12
@@ -14,7 +26,7 @@ The plugin wraps the Android and iOS MSAL libraries from Microsoft.  MSAL Mobile
 Add the following to your pubspec.yaml
 ```yaml
 dependencies:
-  msal_mobile: ^0.1.4
+  msal_mobile: ^1.0.0
 ```
 
 # Azure Setup
@@ -220,7 +232,8 @@ class _MyAppState extends State<MyApp> {
     @override
     void initState() {
         super.initState();
-        MsalMobile.create('assets/auth_config.json', "https://login.microsoftonline.com/Organizations").then((client) {
+        IAuthenticator authenticator = MsalMobile.create('assets/auth_config.json', "https://login.microsoftonline.com/Organizations");
+        authenticator.isReady.then((client) {
             setState(() {
                 msal = client;
             });
@@ -243,9 +256,16 @@ Sign out
 await msal.signOut()
 ```
 
-Get token - attempt silent acquisition and fallback to interactive acquisition
+Get token - attempt silent acquisition and fallback to interactive acquisition. Takes a login hint as an optional third parameter.
 ```dart
-await msal.acquireToken(["api://[app-registration-client-id]/[delegated-permission-name]"]], "https://login.microsoftonline.com/Organizations").then((result) {
+await msal.acquireToken(["api://[app-registration-client-id]/[delegated-permission-name]"]], "https://login.microsoftonline.com/Organizations", "some_username_hint".then((result) {
+    print('access token (truncated): ${result.accessToken}');
+})
+```
+
+Get token with login hint - attempt silent acquisition and fallback to interactive acquisition. Takes a login hint as an optional third parameter.
+```dart
+await msal.acquireTokenWithLoginHint(["api://[app-registration-client-id]/[delegated-permission-name]"]], "https://login.microsoftonline.com/Organizations", "some_username").then((result) {
     print('access token (truncated): ${result.accessToken}');
 })
 ```

@@ -1,6 +1,6 @@
 name: msal_mobile
 description: A Flutter plugin for authenticating with Azure AD on Android and iOS using the Microsoft Authentication library (MSAL).
-version: 0.1.4
+version: 1.0.0
 homepage: https://github.com/gbwisx/msal_mobile
 
 environment:
@@ -26,8 +26,12 @@ flutter:
   # adding or updating assets for this project.
 
   plugin:
-    androidPackage: com.gbwisx.msal_mobile
-    pluginClass: MsalMobilePlugin
+    platforms:
+      android:
+        package: com.gbwisx.msal_mobile
+        pluginClass: MsalMobilePlugin
+      ios:
+        pluginClass: MsalMobilePlugin
 
 
   # To add assets to your plugin package, add an assets section, like this:

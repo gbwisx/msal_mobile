@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
 class MsalMobileException implements Exception {
-  final String message;
-  final String errorCode;
-  final MsalMobileException innerException;
+  final String? message;
+  final String? errorCode;
+  final MsalMobileException? innerException;
 
   MsalMobileException(
-      {@required this.message, this.errorCode, this.innerException});
+      {required this.message, this.errorCode, this.innerException});
 
   MsalMobileException.fromErrorCode(MsalMobileExceptionErrorCode code)
       : message = code.message,
@@ -17,10 +17,10 @@ class MsalMobileException implements Exception {
       MsalMobileExceptionErrorCode code, Exception innerException)
       : message = code.message,
         errorCode = code.errorCode,
-        innerException = innerException;
+        innerException = innerException as MsalMobileException?;
 
   MsalMobileException.copy(
-      MsalMobileException exception, MsalMobileException innerException)
+      MsalMobileException? exception, MsalMobileException? innerException)
       : message = exception?.message,
         errorCode = exception?.errorCode,
         innerException = innerException;

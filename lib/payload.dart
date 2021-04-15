@@ -29,6 +29,6 @@ class MsalMobileAuthenticationResultPayload extends MsalMobileResultPayload {
         tenantId = json['tenantId'],
         scope = json['scope'] != null
             ? json['scope'] as List<dynamic>
-            : List<dynamic>(),
+            : <dynamic>[],
         expiresOn = json['expiresOn'] != null ? json['expiresOn'] : null;
 }

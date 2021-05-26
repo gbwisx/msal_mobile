@@ -1,5 +1,7 @@
 package com.gbwisx.msal_mobile;
 
+import com.google.gson.annotations.SerializedName;
+
 import com.microsoft.identity.client.IAccount;
 import com.microsoft.identity.client.IAuthenticationResult;
 
@@ -10,7 +12,10 @@ public class Payloads {
     static interface MsalMobileResultPayload {}
 
     static class GetAccountResultPayload implements MsalMobileResultPayload {
+        @SerializedName("currentAccount")
         private Payloads.Account currentAccount;
+
+        @SerializedName("accountLoaded")
         private boolean accountLoaded;
 
         GetAccountResultPayload(IAccount currentMsalAccount) {
@@ -22,10 +27,19 @@ public class Payloads {
     }
 
     static class Account {
+        @SerializedName("tenantId")
         private String tenantId;
+
+        @SerializedName("claims")
         private Map<String, ?> claims;
+
+        @SerializedName("authority")
         private String authority;
+
+        @SerializedName("id")
         private String id;
+
+        @SerializedName("username")
         private String username;
 
         Account(String accountTenantId, Map<String, ?> accountClaims, String accountAuthority, String accountId, String accountUsername) {
@@ -38,11 +52,22 @@ public class Payloads {
     }
 
     static class AuthenticationResultPayload implements MsalMobileResultPayload {
+        @SerializedName("cancelled")
         private boolean cancelled;
+
+        @SerializedName("success")
         private boolean success;
+
+        @SerializedName("accessToken")
         private String accessToken;
+
+        @SerializedName("tenantId")
         private String tenantId;
+
+        @SerializedName("scope")
         private String[] scope;
+
+        @SerializedName("expiresOn")
         private String expiresOn;
 
         private AuthenticationResultPayload(final boolean authSuccessful, final boolean authCancelled, final String authAccessToken) {

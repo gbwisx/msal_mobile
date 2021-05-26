@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 import 'exception.dart';
 import 'payload.dart';
 import 'result.dart';
 
-export 'exception.dart';
 export 'account.dart';
+export 'exception.dart';
 export 'payload.dart';
 
 class MsalMobile {
@@ -24,21 +25,14 @@ class MsalMobile {
           MsalMobileExceptionErrorCode.alreadyInitialized);
     }
 
-    String cacheFilePath;
     if (configFilePath == null || configFilePath.length < 1) {
       throw MsalMobileException.fromErrorCode(
           MsalMobileExceptionErrorCode.configRequired);
     }
-    try {
-      cacheFilePath = await cacheConfigFile(configFilePath);
-    } on Exception catch (ex) {
-      throw MsalMobileException.fromErrorCodeWithInner(
-          MsalMobileExceptionErrorCode.configReadError, ex);
-    }
 
     final response = await _channel.invokeMethod<String>(
         'init', <String, dynamic>{
-      'configFilePath': cacheFilePath,
+      'configFilePath': configFilePath,
       'authority': authority
     });
     final result = response != null
@@ -50,14 +44,6 @@ class MsalMobile {
     initialized = true;
     final client = MsalMobile();
     return client;
-  }
-
-  /// Caches the auth configuration file so it can be accessed by the platform specific MSAL implementations.
-  static Future<String> cacheConfigFile(String configPath) async {
-    final ByteData data = await rootBundle.load(configPath);
-    final file = await DefaultCacheManager()
-        .putFile(configPath, data.buffer.asUint8List());
-    return file.path;
   }
 
   /// Gets the current signed in status.  If a current account is specified by the MSAL library, then this is considered to be a signed in state.

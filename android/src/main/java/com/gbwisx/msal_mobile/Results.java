@@ -1,16 +1,26 @@
 package com.gbwisx.msal_mobile;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.microsoft.identity.client.exception.MsalException;
 
 import androidx.annotation.NonNull;
 
 public class Results {
     static class MsalMobileResult {
+        @SerializedName("isSuccess")
         private boolean isSuccess;
+        
+        @SerializedName("exception")
         private ExceptionDetail exception;
+
+        @SerializedName("innerException")
         private ExceptionDetail innerException;
+
+        @SerializedName("payload")
         private Object payload;
+
+        @SerializedName("isUiRequired")
         private boolean isUiRequired;
 
         private MsalMobileResult(@NonNull Exception ex) {

@@ -44,7 +44,7 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);
     }
     initialized = true;
@@ -72,7 +72,7 @@ class MsalMobile {
   }
 
   /// Gets the current and prior account (if applicable) that was authenticated with MSAL.
-  Future<MsalMobileGetAccountResultPayload> getAccount() async {
+  Future<MsalMobileGetAccountResultPayload?> getAccount() async {
     if (!initialized) {
       throw MsalMobileException.fromErrorCode(
           MsalMobileExceptionErrorCode.notInitialized);
@@ -82,7 +82,7 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileGetAccountResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);
     }
     return result.payload;
@@ -90,7 +90,7 @@ class MsalMobile {
 
   /// Signs a user into MSAL if there is not currently any user signed in.  This should be done prior to retrieving
   /// a token if there is no user currently signed in.
-  Future<MsalMobileAuthenticationResultPayload> signIn(
+  Future<MsalMobileAuthenticationResultPayload?> signIn(
       String loginHint, List<String> scopes) async {
     if (!initialized) {
       throw MsalMobileException.fromErrorCode(
@@ -104,7 +104,7 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileAuthenticationResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       // check if the user is already signed in.  That could be the cause of an invalid_parameter failure from MSAL
       final signedIn = await this.getSignedIn();
       if (signedIn) {
@@ -127,13 +127,13 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);
     }
   }
 
   /// Acquires a token interactively, using the necessary UI screens to facilitate the token acquisition.  This bypasses cached values.
-  Future<MsalMobileAuthenticationResultPayload> acquireTokenInteractive(
+  Future<MsalMobileAuthenticationResultPayload?> acquireTokenInteractive(
       List<String> scopes) async {
     if (!initialized) {
       throw MsalMobileException.fromErrorCode(
@@ -147,7 +147,7 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileAuthenticationResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);
     }
     return result.payload;
@@ -155,7 +155,7 @@ class MsalMobile {
 
   /// Acquires a token silently (without UI).  An exception will be thrown if a token cannot be acquired silently.  A user must
   /// first be signed in to successfully retrieve a token silently.
-  Future<MsalMobileAuthenticationResultPayload> acquireTokenSilent(
+  Future<MsalMobileAuthenticationResultPayload?> acquireTokenSilent(
       List<String> scopes, String authority) async {
     if (!initialized) {
       throw MsalMobileException.fromErrorCode(
@@ -169,14 +169,14 @@ class MsalMobile {
     final result = response != null
         ? MsalMobileAuthenticationResult.fromJson(jsonDecode(response))
         : null;
-    if (!result.isSuccess && result.exception != null) {
+    if (!result!.isSuccess && result.exception != null) {
       throw MsalMobileException.copy(result.exception, result.innerException);
     }
     return result.payload;
   }
 
   /// Attempts to acquire a token silently.  If silent token acquisition fails because the UI is required, then an attempt to acquire a token interactively will be made.
-  Future<MsalMobileAuthenticationResultPayload> acquireToken(
+  Future<MsalMobileAuthenticationResultPayload?> acquireToken(
       List<String> scopes, String authority) async {
     if (!initialized) {
       throw MsalMobileException.fromErrorCode(
@@ -190,7 +190,7 @@ class MsalMobile {
     final silentResult = silentResponse != null
         ? MsalMobileAuthenticationResult.fromJson(jsonDecode(silentResponse))
         : null;
-    if (!silentResult.isSuccess && silentResult.isUiRequired) {
+    if (!silentResult!.isSuccess && silentResult.isUiRequired!) {
       // acquire a token interactively
       final interactiveResponse = await _channel.invokeMethod(
         'acquireToken',
@@ -200,7 +200,8 @@ class MsalMobile {
           ? MsalMobileAuthenticationResult.fromJson(
               jsonDecode(interactiveResponse))
           : null;
-      if (!interactiveResult.isSuccess && interactiveResult.exception != null) {
+      if (!interactiveResult!.isSuccess &&
+          interactiveResult.exception != null) {
         throw MsalMobileException.copy(
             interactiveResult.exception, interactiveResult.innerException);
       }
